@@ -12,6 +12,8 @@ TARGET = Averos
 TEMPLATE = app
 CONFIG += c++11
 LIBS *= -L /usr/local/lib/ -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
+INCLUDEPATH += -I ../STP/include
+LIBS += -L ../STP/lib -lSTP
 
 SOURCES += main.cpp\
         mainwindow.cpp \

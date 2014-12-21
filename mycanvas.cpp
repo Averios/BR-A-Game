@@ -4,6 +4,7 @@
 #include <string>
 #include <QDir>
 
+
 MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
     QSFMLCanvas(Parent, Position, Size){
     QFrame* mainFrame = (QFrame*) parent();
@@ -22,7 +23,20 @@ void MyCanvas::OnInit(){
 void MyCanvas::OnUpdate(){
     RenderWindow::clear(sf::Color(0, 128, 0));
 
-    mySprite.rotate(myClock.getElapsedTime().asSeconds() * 100.0f);
+//    mySprite.rotate(myClock.getElapsedTime().asSeconds() * 100.0f);
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+        mySprite.move(0, -3);
+    }
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+        mySprite.move(0, 3);
+    }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+        mySprite.move(3, 0);
+    }
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+        mySprite.move(-3, 0);
+    }
 
     RenderWindow::draw(mySprite);
     myClock.restart();

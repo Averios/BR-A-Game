@@ -6,9 +6,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    MyFrame = nullptr;
     canvas = nullptr;
     connect(ui->connectButton, SIGNAL(clicked()), this, SLOT(OpenGameWindow()));
+    MyFrame = new QFrame;
+    MyFrame->setWindowTitle("Game Window");
+    MyFrame->setFixedSize(960, 540);
+
+    canvas = new MyCanvas(MyFrame, QPoint(0,0), MyFrame->size());
+    connect(MyFrame, SIGNAL(destroyed(QObject*)), this, SLOT(GameWindowClosed()));
 }
 
 //void MainWindow::DrawCanvas(){
@@ -18,25 +23,22 @@ MainWindow::MainWindow(QWidget *parent) :
 //}
 
 void MainWindow::OpenGameWindow(){
-    if(MyFrame == nullptr){
-        MyFrame = new QFrame;
-        MyFrame->setWindowTitle("Game Window");
-        MyFrame->setFixedSize(960, 540);
-
+    if(canvas == nullptr){
         canvas = new MyCanvas(MyFrame, QPoint(0,0), MyFrame->size());
-        connect(MyFrame, SIGNAL(destroyed()), this, SLOT(GameWindowClosed()));
+        connect(MyFrame, SIGNAL(destroyed(QObject*)), this, SLOT(GameWindowClosed()));
     }
-//    this->hide();
+    this->hide();
     MyFrame->show();
     canvas->show();
 }
 
 void MainWindow::GameWindowClosed(){
-    this->hide();
+    this->show();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete canvas;
+    delete MyFrame;
 }
