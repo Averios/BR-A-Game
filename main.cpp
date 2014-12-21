@@ -5,18 +5,18 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-//    MainWindow theMain;
-//    theMain.show();
+    MainWindow theMain;
+    theMain.show();
 
 //    theMain.DrawCanvas();
-    QFrame* mainFrame = new QFrame;
+//    QFrame* mainFrame = new QFrame;
 
-    mainFrame->setWindowTitle("Damn It!");
-    mainFrame->setFixedSize(800, 600);
+//    mainFrame->setWindowTitle("Damn It!");
+//    mainFrame->setFixedSize(960, 540);
 
-    mainFrame->show();
+//    mainFrame->show();
 
-    MyCanvas* canvas = new MyCanvas(mainFrame, QPoint(0, 0), mainFrame->size());
-    canvas->show();
+//    MyCanvas* canvas = new MyCanvas(mainFrame, QPoint(0, 0), mainFrame->size());
+//    canvas->show();
     return a.exec();
 }
