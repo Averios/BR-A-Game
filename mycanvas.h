@@ -2,6 +2,7 @@
 #define MYCANVAS_H
 #include "qsfmlcanvas.h"
 #include "AnimatedSprite.hpp"
+#include <tmx/MapLoader.h>
 
 class MyCanvas: public QSFMLCanvas
 {
@@ -24,6 +25,7 @@ private:
     Animation walkAnimation[4];
     Animation* currentAnimetion;
     AnimatedSprite animated;
+    tmx::MapLoader map;
 };
 
 #endif // MYCANVAS_H

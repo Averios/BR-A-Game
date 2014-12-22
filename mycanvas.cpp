@@ -5,7 +5,9 @@
 #include <QDir>
 
 MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
-    QSFMLCanvas(Parent, Position, Size){
+    QSFMLCanvas(Parent, Position, Size),
+    map("Resources/Tileset/LPC_forest")
+{
     directionPressed = false;
 }
 void MyCanvas::OnInit(){
@@ -28,6 +30,8 @@ void MyCanvas::OnInit(){
     mySprite.setPosition(mainFrame->size().width() / 2, mainFrame->size().height() /2);
     sf::FloatRect bound = mySprite.getGlobalBounds();
     mySprite.setOrigin(bound.width / 2, bound.height /2);
+//    map.AddSearchPath("Resources/Tileset/LPC_forest");
+    map.Load("exampleMap.tmx");
 }
 
 void MyCanvas::OnUpdate(){
@@ -71,6 +75,7 @@ void MyCanvas::OnUpdate(){
 
     animated.update(myTime);
 
+    RenderWindow::draw(map);
     RenderWindow::draw(animated);
 
 //    mySprite.setTextureRect(sf::IntRect(source.x * 32, source.y * 48, 32, 48));
