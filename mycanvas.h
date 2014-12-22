@@ -1,6 +1,7 @@
 #ifndef MYCANVAS_H
 #define MYCANVAS_H
 #include "qsfmlcanvas.h"
+#include "AnimatedSprite.hpp"
 
 class MyCanvas: public QSFMLCanvas
 {
@@ -12,7 +13,17 @@ private:
 
     sf::Texture myImage;
     sf::Sprite mySprite;
-    sf::Clock myClock;    
+    sf::Clock myClock;
+    sf::Time myTime;
+    sf::Event events;
+    enum Direction{Down, Left, Right, Up};
+    bool directionPressed;
+    sf::Vector2i source;
+    sf::Vector2f movement;
+    float moveSpeed;
+    Animation walkAnimation[4];
+    Animation* currentAnimetion;
+    AnimatedSprite animated;
 };
 
 #endif // MYCANVAS_H
