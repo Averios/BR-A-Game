@@ -12,16 +12,20 @@ TARGET = Averos
 TEMPLATE = app
 CONFIG += c++11
 LIBS *= -L /usr/local/lib/ -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
-INCLUDEPATH += -I ../STP/include
-LIBS += -L ../STP/lib -lSTP
+INCLUDEPATH += -I "../STP/include/"
+LIBS += -L"../STP/lib/" -lSTP
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     qsfmlcanvas.cpp \
-    mycanvas.cpp
+    mycanvas.cpp \
+    AnimatedSprite.cpp \
+    Animation.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
-    mycanvas.h
+    mycanvas.h \
+    AnimatedSprite.hpp \
+    Animation.hpp
 
 FORMS    += mainwindow.ui
