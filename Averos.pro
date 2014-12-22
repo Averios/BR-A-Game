@@ -11,9 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Averos
 TEMPLATE = app
 CONFIG += c++11
-LIBS *= -L /usr/local/lib/ -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
-INCLUDEPATH += -I "../STP/include/"
-LIBS += -L"../STP/lib/" -lSTP
+LIBS *= -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window -ltmx-loader
 
 SOURCES += main.cpp\
         mainwindow.cpp \
