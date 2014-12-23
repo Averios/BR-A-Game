@@ -26,6 +26,7 @@ private:
     Animation* currentAnimetion;
     AnimatedSprite animated;
     tmx::MapLoader map;
+    tmx::MapLayer* tops;
 };
 
 #endif // MYCANVAS_H

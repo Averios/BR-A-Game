@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="forest_tiles" tilewidth="32" tileheight="32">
   <image source="forest_tiles.png" width="512" height="512"/>
  </tileset>
  <layer name="Terrain" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFgx6zADEzEmZBwqJkmEUIE2smMWbRykxq+pec+KCWWdgwOxBzQDEnFcwSA2IJKFaj0ExxJLNgWBJNDRuVzSMFqwOxBhrWpFK8jGJUDADVqAT+
+   eJxjZGBgYBxGWAiKB6t55GIWIGZGwixIWJQMswhhYs0kxixamUlN/5ITH9QyCxtmB2IOKOakglliQCwBxWoUmimOZBYMS6KpYaOyeaRgdSDWQMOaVIqXUYyKATxeBUI=
   </data>
  </layer>
  <layer name="Foreground" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFAwkSgTgJiaYUFAJxERI9CvADPjR6FJAPZIaxeTI48EgHAKQQBGU=
+   eJxjYBgFwwkUAnEREj0K8AM+NHoUkA9khrF5MjjwSAcAcE8C3w==
   </data>
  </layer>
+ <layer name="Top" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFAwkSgTgJiR4Fo2AUjIKhAgA6AQGH
+  </data>
+ </layer>
+ <objectgroup name="Object" width="20" height="20">
+  <object name="SpawnPoint" type="Spawn" x="275" y="208"/>
+ </objectgroup>
 </map>

@@ -12,6 +12,7 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
 }
 void MyCanvas::OnInit(){
     moveSpeed = 100;
+
     myImage.loadFromFile("Resources/Character/mafuyu.png");
     QFrame* mainFrame = (QFrame*)parent();
     for(int i = 0; i < 4; i++){
@@ -30,8 +31,16 @@ void MyCanvas::OnInit(){
     mySprite.setPosition(mainFrame->size().width() / 2, mainFrame->size().height() /2);
     sf::FloatRect bound = mySprite.getGlobalBounds();
     mySprite.setOrigin(bound.width / 2, bound.height /2);
-//    map.AddSearchPath("Resources/Tileset/LPC_forest");
+    map.AddSearchPath("Resources/Tileset/LPC_forest");
     map.Load("exampleMap.tmx");
+
+    for(auto& layers : map.GetLayers()){
+        if(layers.name == "Top"){
+            layers.visible = false;
+            tops = &layers;
+        }
+    }
+    tops->visible = true;
 }
 
 void MyCanvas::OnUpdate(){
@@ -76,7 +85,10 @@ void MyCanvas::OnUpdate(){
     animated.update(myTime);
 
     RenderWindow::draw(map);
+
     RenderWindow::draw(animated);
+
+    RenderWindow::draw(*tops);
 
 //    mySprite.setTextureRect(sf::IntRect(source.x * 32, source.y * 48, 32, 48));
 
