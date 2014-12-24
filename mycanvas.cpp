@@ -49,13 +49,15 @@ void MyCanvas::OnInit(){
         }
     }
     tops->visible = true;
-//    tmx::MapObjects theObject = tops->objects;
-//    tmx::MapObject duds = theObject.at(0);
-//    duds.GetPosition();
+
     sf::View fixed = this->getView();
     standard = fixed;
-    this->setView(standard);
     standard.setCenter(animated.getPosition());
+
+    PlayerCollisionPoint.push_back(sf::Vector2f(0.f, 48.f));
+    PlayerCollisionPoint.push_back(sf::Vector2f(32.f, 48.f));
+    PlayerCollisionPoint.push_back(sf::Vector2f(0.f, 32.f));
+    PlayerCollisionPoint.push_back(sf::Vector2f(32.f, 32.f));
 }
 
 void MyCanvas::OnUpdate(){
@@ -94,7 +96,14 @@ void MyCanvas::OnUpdate(){
 
     for(tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
         if(now->GetName() == "Wall" || now->GetName() == "Edge"){
-            if(animated.getGlobalBounds().intersects(now->GetAABB())){
+            bool collide = false;
+            for(sf::Vector2f collision : PlayerCollisionPoint){
+                if(now->Contains(animated.getPosition() + collision)){
+                    collide = true;
+                    break;
+                }
+            }
+            if(collide){
                 animated.move(-movement * myTime.asSeconds());
                 break;
             }
