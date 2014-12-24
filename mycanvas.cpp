@@ -90,6 +90,16 @@ void MyCanvas::OnUpdate(){
     }
     animated.play(*currentAnimetion);
     animated.move(movement * myTime.asSeconds());
+    map.UpdateQuadTree(sf::FloatRect(0.f, 0.f, 640.f, 640.f));
+
+    for(tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
+        if(now->GetName() == "Wall" || now->GetName() == "Edge"){
+            if(animated.getGlobalBounds().intersects(now->GetAABB())){
+                animated.move(-movement * myTime.asSeconds());
+                break;
+            }
+        }
+    }
 
     sf::Vector2f distance = this->getView().getCenter() - animated.getPosition();
     if(fabs(distance.x) > 100.0f || fabs(distance.y) > 100.0f){
