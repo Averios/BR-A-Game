@@ -90,29 +90,49 @@ void MyCanvas::OnUpdate(){
         directionPressed = true;
         currentAnimetion = &walkAnimation[Direction::Left];
     }
+    movement = movement * myTime.asSeconds();
     animated.play(*currentAnimetion);
-    animated.move(movement * myTime.asSeconds());
-    map.UpdateQuadTree(sf::FloatRect(0.f, 0.f, 640.f, 640.f));
+//    animated.move(movement);
+//    map.UpdateQuadTree(sf::FloatRect(0.f, 0.f, 640.f, 640.f));
 
-    for(tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
+//    for(tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
+//        if(now->GetName() == "Wall" || now->GetName() == "Edge"){
+//            bool collide = false;
+//            for(sf::Vector2f collision : PlayerCollisionPoint){
+//                if(now->Contains(animated.getPosition() + collision)){
+//                    collide = true;
+//                    break;
+//                }
+//            }
+//            if(collide){
+//                animated.move(-movement * myTime.asSeconds());
+//                break;
+//            }
+//        }
+//    }
+
+    map.UpdateQuadTree(sf::FloatRect(RenderWindow::getViewport(standard)));
+    bool collide = false;
+    for(const tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
         if(now->GetName() == "Wall" || now->GetName() == "Edge"){
-            bool collide = false;
             for(sf::Vector2f collision : PlayerCollisionPoint){
-                if(now->Contains(animated.getPosition() + collision)){
+                if(now->Contains(animated.getPosition() + collision + (movement))){
                     collide = true;
                     break;
                 }
             }
             if(collide){
-                animated.move(-movement * myTime.asSeconds());
                 break;
             }
         }
     }
+    if(!collide){
+        animated.move(movement);
+    }
 
     sf::Vector2f distance = this->getView().getCenter() - animated.getPosition();
     if(fabs(distance.x) > 100.0f || fabs(distance.y) > 100.0f){
-        standard.move(movement * myTime.asSeconds());
+        standard.move(movement);
     }
 
     if(!directionPressed){
