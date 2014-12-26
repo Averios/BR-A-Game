@@ -53,10 +53,10 @@ void MyCanvas::OnInit(){
     standard = fixed;
     standard.setCenter(animated.getPosition());
 
-    PlayerCollisionPoint.push_back(sf::Vector2f(0.f, 48.f));
-    PlayerCollisionPoint.push_back(sf::Vector2f(32.f, 48.f));
-    PlayerCollisionPoint.push_back(sf::Vector2f(0.f, 32.f));
-    PlayerCollisionPoint.push_back(sf::Vector2f(32.f, 32.f));
+    sf::Vector2f topLeft = standard.getCenter();
+    topLeft.x -= 480.f;
+    topLeft.y -= 270.f;
+    map.UpdateQuadTree(sf::FloatRect(topLeft.x, topLeft.y, 960.f, 540.f));
 }
 
 void MyCanvas::OnUpdate(){
@@ -119,17 +119,12 @@ void MyCanvas::OnUpdate(){
 //        }
 //    }
 
-    map.UpdateQuadTree(sf::FloatRect(RenderWindow::getViewport(standard)));
+
     bool collide = false;
     for(const tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
         if(now->GetName() == "Wall" || now->GetName() == "Edge"){
-            for(sf::Vector2f collision : PlayerCollisionPoint){
-                if(now->Contains(animated.getPosition() + collision + (movement))){
-                    collide = true;
-                    break;
-                }
-            }
-            if(collide){
+            if(now->GetAABB().intersects(sf::FloatRect(animated.getPosition().x + movement.x, animated.getPosition().y + 32.f + movement.y, 32.f, 16.f))){
+                collide = true;
                 break;
             }
         }
@@ -141,6 +136,10 @@ void MyCanvas::OnUpdate(){
     sf::Vector2f distance = this->getView().getCenter() - animated.getPosition();
     if(fabs(distance.x) > 100.0f || fabs(distance.y) > 100.0f){
         standard.move(movement);
+        sf::Vector2f topLeft = standard.getCenter();
+        topLeft.x -= 480.f;
+        topLeft.y -= 270.f;
+        map.UpdateQuadTree(sf::FloatRect(topLeft.x, topLeft.y, 960.f, 540.f));
     }
 
     if(!directionPressed){

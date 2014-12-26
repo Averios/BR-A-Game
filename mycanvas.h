@@ -29,7 +29,6 @@ private:
     tmx::MapLayer* tops;
 
     sf::View standard;
-    std::vector<sf::Vector2f> PlayerCollisionPoint;
 };
 
 #endif // MYCANVAS_H
