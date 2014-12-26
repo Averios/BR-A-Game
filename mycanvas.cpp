@@ -16,7 +16,6 @@ void MyCanvas::OnInit(){
     moveSpeed = 100;
 
     myImage.loadFromFile("Resources/Character/mafuyu.png");
-    QFrame* mainFrame = (QFrame*)parent();
     for(int i = 0; i < 4; i++){
         walkAnimation[i].setSpriteSheet(myImage);
         for(int j = 0; j < 4; j++){
@@ -24,14 +23,14 @@ void MyCanvas::OnInit(){
         }
     }
 
-    mySprite.setTexture(myImage);
+    //mySprite.setTexture(myImage);
     currentAnimetion = &walkAnimation[Direction::Down];
 
     animated.setFrameTime(sf::seconds(0.15));
 
-    mySprite.setPosition(mainFrame->size().width() / 2, mainFrame->size().height() /2);
-    sf::FloatRect bound = mySprite.getGlobalBounds();
-    mySprite.setOrigin(bound.width / 2, bound.height /2);
+    //mySprite.setPosition(mainFrame->size().width() / 2, mainFrame->size().height() /2);
+    //sf::FloatRect bound = mySprite.getGlobalBounds();
+   // mySprite.setOrigin(bound.width / 2, bound.height /2);
     map.AddSearchPath("Resources/Tileset/LPC_forest");
     map.Load("exampleMap.tmx");
 
@@ -89,6 +88,15 @@ void MyCanvas::OnUpdate(){
         source.y = Left;
         directionPressed = true;
         currentAnimetion = &walkAnimation[Direction::Left];
+    }
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
+        std::cout << "the left button was pressed" << std::endl;
+        std::cout << "mouse x: " << mouse.x << std::endl;
+        std::cout << "mouse y: " << mouse.y << std::endl;
+
+        std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
     }
     movement = movement * myTime.asSeconds();
     animated.play(*currentAnimetion);

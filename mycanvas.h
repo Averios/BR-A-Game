@@ -3,7 +3,6 @@
 #include "qsfmlcanvas.h"
 #include "AnimatedSprite.hpp"
 #include <tmx/MapLoader.h>
-
 class MyCanvas: public QSFMLCanvas
 {
 public:
@@ -13,7 +12,7 @@ private:
     void OnUpdate();
 
     sf::Texture myImage;
-    sf::Sprite mySprite;
+    //sf::Sprite mySprite;
     sf::Clock myClock;
     sf::Time myTime;
     sf::Event events;
@@ -25,6 +24,7 @@ private:
     Animation walkAnimation[4];
     Animation* currentAnimetion;
     AnimatedSprite animated;
+    std::vector<AnimatedSprite*> bullets;
     tmx::MapLoader map;
     tmx::MapLayer* tops;
 
