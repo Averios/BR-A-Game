@@ -2,6 +2,7 @@
 #define GAMEDIALOG_H
 
 #include <QDialog>
+#include "mycanvas.h"
 
 namespace Ui {
 class GameDialog;
@@ -17,6 +18,7 @@ public:
 
 private:
     Ui::GameDialog *ui;
+    MyCanvas* theCanvas;
     bool initialized;
     void showEvent(QShowEvent *);
     void keyPressEvent(QKeyEvent *k);

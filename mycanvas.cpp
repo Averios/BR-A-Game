@@ -65,7 +65,7 @@ void MyCanvas::OnUpdate(){
     myTime = myClock.restart();
     movement.x = 0.f;
     movement.y = 0.f;
-    if(parentWidget()->hasFocus()){
+    if(!chatWidget->hasFocus() && this->isActiveWindow()){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
             movement.y -= moveSpeed;
             source.y = Up;
@@ -163,4 +163,8 @@ void MyCanvas::OnUpdate(){
 //    mySprite.setTextureRect(sf::IntRect(source.x * 32, source.y * 48, 32, 48));
 
 //    RenderWindow::draw(mySprite);
+}
+
+void MyCanvas::getChat(QWidget *chatWidget){
+    this->chatWidget = chatWidget;
 }

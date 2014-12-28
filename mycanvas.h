@@ -7,6 +7,7 @@ class MyCanvas: public QSFMLCanvas
 {
 public:
     MyCanvas(QWidget* Parent, const QPoint& Position, const QSize& Size);
+    void getChat(QWidget* chatWidget);
 private:
     void OnInit();
     void OnUpdate();
@@ -29,6 +30,7 @@ private:
     tmx::MapLayer* tops;
 
     sf::View standard;
+    QWidget* chatWidget;
 };
 
 #endif // MYCANVAS_H

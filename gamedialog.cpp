@@ -1,6 +1,5 @@
 #include "gamedialog.h"
 #include "ui_gamedialog.h"
-#include "mycanvas.h"
 #include <QKeyEvent>
 
 GameDialog::GameDialog(QWidget *parent) :
@@ -15,7 +14,8 @@ GameDialog::GameDialog(QWidget *parent) :
 
 void GameDialog::showEvent(QShowEvent *){
     if(!initialized){
-        MyCanvas* theCanvas = new MyCanvas(ui->frame, QPoint(0, 0), ui->frame->size());
+        theCanvas = new MyCanvas(ui->frame, QPoint(0, 0), ui->frame->size());
+        theCanvas->getChat(ui->chatImput);
         theCanvas->show();
         initialized = true;
     }
@@ -30,8 +30,12 @@ void GameDialog::SendMessage(){
 }
 
 void GameDialog::keyPressEvent(QKeyEvent *k){
-    if(ui->frame->hasFocus() && k->key() == Qt::Key_Space){
+    if(!ui->chatImput->hasFocus() && k->key() == Qt::Key_Space){
         ui->chatImput->setFocus();
+    }
+    else if(ui->chatImput->hasFocus() && k->key() == Qt::Key_Escape){
+        ui->chatImput->clear();
+        ui->frame->setFocus();
     }
 }
 
