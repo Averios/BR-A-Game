@@ -48,6 +48,9 @@
      <height>491</height>
     </rect>
    </property>
+   <property name="tabStopWidth">
+    <number>10</number>
+   </property>
   </widget>
  </widget>
  <resources/>

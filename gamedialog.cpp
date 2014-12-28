@@ -22,8 +22,10 @@ void GameDialog::showEvent(QShowEvent *){
 }
 
 void GameDialog::SendMessage(){
-    QString message = ui->chatImput->text();
     //Send the message
+    socket.write(QString("C ").toUtf8() + ui->chatImput->text().toUtf8() + "\n");
+    socket.flush();
+
 
     ui->chatImput->clear();
     ui->frame->setFocus();
@@ -37,6 +39,30 @@ void GameDialog::keyPressEvent(QKeyEvent *k){
         ui->chatImput->clear();
         ui->frame->setFocus();
     }
+}
+
+void GameDialog::connectTo(QString IP, quint16 port){
+    connect(&socket, SIGNAL(readyRead()), this, SLOT(ReadyToRead()));
+    socket.connectToHost(IP, port);
+}
+
+void GameDialog::ReadyToRead(){
+    QByteArray data = socket.readAll();
+    QString stream(data);
+//    stream = stream.toUtf8();
+//    QStringList stringList = stream.split(QRegExp("\n|\r\n|\r"));
+//    const int listSize = stringList.size();
+//    for(int i = 0; i < listSize; i++){
+        if(stream.at(0) == 'C'){
+            QStringList message = stream.split(" ");
+            QString player = "Player" + message.at(1);
+            QString realMessage;
+            for(int i = 2; i < message.length(); i++){
+                realMessage += QString(" ") + message.at(i);
+            }
+            ui->chatBox->append(player + ":" + realMessage.split("\n").at(0));
+        }
+//    }
 }
 
 GameDialog::~GameDialog()

@@ -35,6 +35,7 @@ void MainWindow::OpenGameWindow(){
 
     GameDialog* theDialog = new GameDialog;
     theDialog->setWindowTitle("FP Progjar");
+    theDialog->connectTo(ui->ipLine->text(), ui->portLine->text().toUInt());
     theDialog->show();
     this->hide();
 }
