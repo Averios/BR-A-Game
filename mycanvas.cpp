@@ -65,39 +65,42 @@ void MyCanvas::OnUpdate(){
     myTime = myClock.restart();
     movement.x = 0.f;
     movement.y = 0.f;
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-        movement.y -= moveSpeed;
-        source.y = Up;
-        directionPressed = true;
-        currentAnimetion = &walkAnimation[Direction::Up];
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-        movement.y += moveSpeed;
-        source.y = Down;
-        directionPressed = true;
-        currentAnimetion = &walkAnimation[Direction::Down];
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        movement.x += moveSpeed;
-        source.y = Right;
-        directionPressed = true;
-        currentAnimetion = &walkAnimation[Direction::Right];
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        movement.x -= moveSpeed;
-        source.y = Left;
-        directionPressed = true;
-        currentAnimetion = &walkAnimation[Direction::Left];
-    }
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
-        std::cout << "the left button was pressed" << std::endl;
-        std::cout << "mouse x: " << mouse.x << std::endl;
-        std::cout << "mouse y: " << mouse.y << std::endl;
+    if(parentWidget()->hasFocus()){
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+            movement.y -= moveSpeed;
+            source.y = Up;
+            directionPressed = true;
+            currentAnimetion = &walkAnimation[Direction::Up];
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+            movement.y += moveSpeed;
+            source.y = Down;
+            directionPressed = true;
+            currentAnimetion = &walkAnimation[Direction::Down];
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+            movement.x += moveSpeed;
+            source.y = Right;
+            directionPressed = true;
+            currentAnimetion = &walkAnimation[Direction::Right];
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+            movement.x -= moveSpeed;
+            source.y = Left;
+            directionPressed = true;
+            currentAnimetion = &walkAnimation[Direction::Left];
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
+            std::cout << "the left button was pressed" << std::endl;
+            std::cout << "mouse x: " << mouse.x << std::endl;
+            std::cout << "mouse y: " << mouse.y << std::endl;
 
-        std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+            std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+        }
     }
+
     movement = movement * myTime.asSeconds();
     animated.play(*currentAnimetion);
 //    animated.move(movement);
