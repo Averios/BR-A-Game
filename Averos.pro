@@ -19,14 +19,18 @@ SOURCES += main.cpp\
     mycanvas.cpp \
     AnimatedSprite.cpp \
     Animation.cpp \
-    gamedialog.cpp
+    gamedialog.cpp \
+    player.cpp \
+    bullet.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
     mycanvas.h \
     AnimatedSprite.hpp \
     Animation.hpp \
-    gamedialog.h
+    gamedialog.h \
+    player.h \
+    bullet.h
 
 FORMS    += mainwindow.ui \
     gamedialog.ui

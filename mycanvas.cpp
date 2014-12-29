@@ -11,6 +11,7 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
     map("Resources/Tileset/LPC_forest")
 {
     directionPressed = false;
+    playing = false;
 }
 void MyCanvas::OnInit(){
     moveSpeed = 100;
@@ -33,7 +34,6 @@ void MyCanvas::OnInit(){
    // mySprite.setOrigin(bound.width / 2, bound.height /2);
     map.AddSearchPath("Resources/Tileset/LPC_forest");
     map.Load("exampleMap.tmx");
-
 
     for(tmx::MapLayer& layers : map.GetLayers()){
         if(layers.name == "Top"){
@@ -65,7 +65,7 @@ void MyCanvas::OnUpdate(){
     myTime = myClock.restart();
     movement.x = 0.f;
     movement.y = 0.f;
-    if(!chatWidget->hasFocus() && this->isActiveWindow()){
+    if(!chatWidget->hasFocus() && this->isActiveWindow() && playing){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
             movement.y -= moveSpeed;
             source.y = Up;
@@ -167,4 +167,16 @@ void MyCanvas::OnUpdate(){
 
 void MyCanvas::getChat(QWidget *chatWidget){
     this->chatWidget = chatWidget;
+}
+
+void MyCanvas::startGame(){
+    this->playing = true;
+}
+
+void MyCanvas::finishGame(){
+    this->playing = false;
+}
+
+bool MyCanvas::isPlaying(){
+    return this->playing;
 }
