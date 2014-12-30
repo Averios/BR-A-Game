@@ -20,7 +20,7 @@ public:
     void startGame();
     void finishGame();
     bool isPlaying();
-    void setSocket(qintptr socketDescriptor);
+    void setSocket(QTcpSocket* socket);
     void addPlayer(int number);
 
 private:
@@ -41,6 +41,7 @@ private:
     Animation walkAnimation[4];
     Animation* currentAnimetion;
     AnimatedSprite animated;
+    QSharedPointer<Player> myPlayer;
 
     QList<QSharedPointer<Bullet> > bullets;
     QList<QSharedPointer<Bullet> > bulletRemovalList;

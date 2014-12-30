@@ -16,7 +16,7 @@ void GameDialog::showEvent(QShowEvent *){
     if(!initialized){
         theCanvas = new MyCanvas(ui->frame, QPoint(0, 0), ui->frame->size());
         theCanvas->getChat(ui->chatImput);
-        theCanvas->setSocket(socket.socketDescriptor());
+        theCanvas->setSocket(&socket);
         theCanvas->show();
         initialized = true;
     }
@@ -51,11 +51,12 @@ void GameDialog::ReadyToRead(){
     QByteArray data = socket.readAll();
     QString stream(data);
 //    stream = stream.toUtf8();
-//    QStringList stringList = stream.split(QRegExp("\n|\r\n|\r"));
-//    const int listSize = stringList.size();
-//    for(int i = 0; i < listSize; i++){
-        if(stream.at(0) == 'C'){
-            QStringList message = stream.split(" ");
+//    qDebug() << stream;
+    for(QString now : stream.split("\n")){
+        qDebug() << now;
+        if(now == NULL)continue;
+        if(now.at(0) == 'C'){
+            QStringList message = now.split(" ");
             QString player = "Player" + message.at(1);
             QString realMessage;
             for(int i = 2; i < message.length(); i++){
@@ -63,31 +64,32 @@ void GameDialog::ReadyToRead(){
             }
             ui->chatBox->append(player + ":" + realMessage.split("\n").at(0));
         }
-        else if(stream.at(0) == 'W'){
-            QStringList message = stream.split(" ");
+        else if(now.at(0) == 'W'){
+            QStringList message = now.split(" ");
             int moveSequence;
-            if(message.at(2) == "D"){
+            if(message.at(0).at(1) == 'D'){
                 moveSequence = 0;
             }
-            else if(message.at(2) == "L"){
+            else if(message.at(0).at(1) == 'L'){
                 moveSequence = 1;
             }
-            else if(message.at(2) == "R"){
+            else if(message.at(0).at(1) == 'R'){
                 moveSequence = 2;
             }
-            else if(message.at(2) == "U"){
+            else if(message.at(0).at(1) == 'U'){
                 moveSequence = 3;
             }
-            theCanvas->SetPosition(message.at(1).toInt(), sf::Vector2f(message.at(3).toFloat(), message.at(4).toFloat()), moveSequence, message.at(5).toInt());
+
+            theCanvas->SetPosition(message.at(1).toInt(), sf::Vector2f(message.at(2).toFloat(), message.at(3).toFloat()), moveSequence, now.split(" ").at(4).toInt());
         }
-        else if(stream.at(0) == 'P'){
-            QStringList message = stream.split(" ");
+        else if(now.at(0) == 'P'){
+            QStringList message = now.split(" ");
             theCanvas->setPlayerNumber(message.at(1).toInt());
         }
-        else if(stream.contains("GS")){
+        else if(now.contains("GS")){
             theCanvas->startGame();
         }
-//    }
+    }
 }
 
 GameDialog::~GameDialog()

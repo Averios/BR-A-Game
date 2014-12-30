@@ -13,9 +13,6 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
     directionPressed = false;
     playing = false;
     this->socket = new QTcpSocket;
-}
-void MyCanvas::OnInit(){
-    moveSpeed = 100;
 
     myImage.loadFromFile("Resources/Character/mafuyu.png");
     for(int i = 0; i < 4; i++){
@@ -25,6 +22,14 @@ void MyCanvas::OnInit(){
         }
     }
     bulletTexture.loadFromFile("Resources/Image/bullet.png");
+    myPlayer = QSharedPointer<Player>(new Player);
+    myPlayer.data()->animated = walkAnimation;
+
+}
+void MyCanvas::OnInit(){
+    moveSpeed = 100;
+
+
 
     currentAnimetion = &walkAnimation[Direction::Down];
 
@@ -44,7 +49,7 @@ void MyCanvas::OnInit(){
 
     sf::View fixed = this->getView();
     standard = fixed;
-    standard.setCenter(animated.getPosition());
+    standard.setCenter(myPlayer.data()->getPosition());
 
     map.UpdateQuadTree(sf::FloatRect(0.f, 0.f, 3200.f, 3200.f));
 }
@@ -55,39 +60,51 @@ void MyCanvas::OnUpdate(){
     myTime = myClock.restart();
     movement.x = 0.f;
     movement.y = 0.f;
-    if(!chatWidget->hasFocus() && this->isActiveWindow() && playing){
+    if(!chatWidget->hasFocus() && this->isActiveWindow()){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
             movement.y -= moveSpeed;
             directionPressed = true;
             currentAnimetion = &walkAnimation[Direction::Up];
-            moveString = "WU";
+
+            myPlayer.data()->setAnimationSequence(Direction::Up);
+            myPlayer.data()->updated = true;
+            moveString = "WU ";
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
             movement.y += moveSpeed;
             directionPressed = true;
             currentAnimetion = &walkAnimation[Direction::Down];
-            moveString = "WD";
+
+            myPlayer.data()->setAnimationSequence(Direction::Down);
+            myPlayer.data()->updated = true;
+            moveString = "WD ";
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
             movement.x += moveSpeed;
             directionPressed = true;
             currentAnimetion = &walkAnimation[Direction::Right];
-            moveString = "WR";
+
+            myPlayer.data()->setAnimationSequence(Direction::Right);
+            myPlayer.data()->updated = true;
+            moveString = "WR ";
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
             movement.x -= moveSpeed;
             directionPressed = true;
             currentAnimetion = &walkAnimation[Direction::Left];
-            moveString = "WL";
+
+            myPlayer.data()->setAnimationSequence(Direction::Left);
+            myPlayer.data()->updated = true;
+            moveString = "WL ";
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
-            std::cout << "the left button was pressed" << std::endl;
-            std::cout << "mouse x: " << mouse.x << std::endl;
-            std::cout << "mouse y: " << mouse.y << std::endl;
+//            std::cout << "the left button was pressed" << std::endl;
+//            std::cout << "mouse x: " << mouse.x << std::endl;
+//            std::cout << "mouse y: " << mouse.y << std::endl;
 
-            std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+//            std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
         }
     }
 
@@ -97,17 +114,18 @@ void MyCanvas::OnUpdate(){
     bool collide = false;
     for(const tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
         if(now->GetName() == "Wall" || now->GetName() == "Edge"){
-            if(now->GetAABB().intersects(sf::FloatRect(animated.getPosition().x + movement.x, animated.getPosition().y + 32.f + movement.y, 32.f, 16.f))){
+            if(now->GetAABB().intersects(sf::FloatRect(myPlayer.data()->Sprite.getPosition().x + movement.x, myPlayer.data()->Sprite.getPosition().y + 32.f + movement.y, 32.f, 16.f))){
                 collide = true;
                 break;
             }
         }
     }
     if(!collide){
-        animated.move(movement);
+//        animated.move(movement);
+        myPlayer.data()->Sprite.move(movement);
     }
 
-    sf::Vector2f distance = this->getView().getCenter() - animated.getPosition();
+    sf::Vector2f distance = this->getView().getCenter() - myPlayer.data()->getPosition();
     if(fabs(distance.x) > 100.0f || fabs(distance.y) > 100.0f){
         standard.move(movement);
     }
@@ -119,7 +137,7 @@ void MyCanvas::OnUpdate(){
         socket->write(moveString.toUtf8() + QString::number(moveCounter).toUtf8() + "\n");
 
         movementQueue.append(QPair<sf::Vector2f, int>(movement, moveCounter++));
-        socket->flush();
+//        socket->flush();
     }
     directionPressed = false;
 
@@ -129,7 +147,17 @@ void MyCanvas::OnUpdate(){
 
     RenderWindow::draw(map);
 
-    RenderWindow::draw(animated);
+//    RenderWindow::draw(animated);
+    for(const QSharedPointer<Player> now : PlayerList){
+        if(now.data()->updated){
+            now.data()->playAnimation();
+        }
+        else{
+            now.data()->stopAnimation();
+        }
+        RenderWindow::draw(now.data()->Sprite);
+    }
+
 
     RenderWindow::draw(*tops);
 
@@ -154,17 +182,18 @@ bool MyCanvas::isPlaying(){
 }
 
 void MyCanvas::refocusCamera(){
-    standard.setCenter(animated.getPosition());
+    standard.setCenter(myPlayer.data()->Sprite.getPosition());
+    qDebug() << myPlayer.data()->Sprite.getPosition().x << " " << myPlayer.data()->Sprite.getPosition().y;
 }
 
 void MyCanvas::setPlayerNumber(int number){
     this->playerNumber = number;
-    PlayerMap.insert(number, animated);
-    PlayerList.append(animated);
+    PlayerMap.insert(number, myPlayer);
+    PlayerList.append(myPlayer);
 }
 
-void MyCanvas::setSocket(qintptr socketDescriptor){
-    this->socket->setSocketDescriptor(socketDescriptor);
+void MyCanvas::setSocket(QTcpSocket* socket){
+    this->socket = socket;
 }
 
 void MyCanvas::SetPosition(int character, sf::Vector2f position, int sequence, int sequenceNumber){
@@ -203,13 +232,13 @@ void MyCanvas::RecalculatePosition(sf::Vector2f position, int moveSequence, int 
                 position += movementQueue.at(i).first;
             }
         }
-        thePlayer.data()->Sprite.setPosition(position);
     }
     else{
-        thePlayer.data()->Sprite.setPosition(position);
         thePlayer.data()->setAnimationSequence(moveSequence);
     }
     thePlayer.data()->updated = true;
+    thePlayer.data()->Sprite.setPosition(position);
+    lastPoint = position;
 }
 
 void MyCanvas::addBullet(sf::Vector2f position, float angle){
@@ -218,4 +247,13 @@ void MyCanvas::addBullet(sf::Vector2f position, float angle){
     theBullet.data()->setSpeed(500);
     theBullet.data()->texture.setTexture(bulletTexture);
     bullets.append(theBullet);
+}
+
+void MyCanvas::addPlayer(int number){
+    if(number != playerNumber){
+        QSharedPointer<Player> thePlayer(new Player);
+        thePlayer.data()->animated = walkAnimation;
+        PlayerMap.insert(number, thePlayer);
+        PlayerList.append(thePlayer);
+    }
 }
