@@ -29,7 +29,7 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
 
 }
 void MyCanvas::OnInit(){
-    moveSpeed = 300;
+    moveSpeed = 200;
 
 
 
@@ -175,6 +175,7 @@ void MyCanvas::getChat(QWidget *chatWidget){
 void MyCanvas::startGame(){
     moveCounter = 0;
     this->playing = true;
+    movementQueue.clear();
     refocusCamera();
 }
 
@@ -255,7 +256,7 @@ void MyCanvas::addBullet(sf::Vector2f position, float angle){
 }
 
 void MyCanvas::addPlayer(int number){
-    if(number != playerNumber){
+    if(number != playerNumber && !PlayerMap.contains(number)){
         QSharedPointer<Player> thePlayer(new Player);
         thePlayer.data()->animated = walkAnimation;
         PlayerMap.insert(number, thePlayer);

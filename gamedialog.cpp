@@ -89,6 +89,13 @@ void GameDialog::ReadyToRead(){
         else if(now.contains("GS")){
             theCanvas->startGame();
         }
+        else if(now.at(0) == 'N'){
+            QStringList theStr = now.split(" ");
+            int sizeS = theStr.size();
+            for(int i = 1; i < sizeS; i++){
+                theCanvas->addPlayer(theStr.at(i).toInt());
+            }
+        }
     }
 }
 
