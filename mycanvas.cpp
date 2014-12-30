@@ -24,10 +24,12 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
     bulletTexture.loadFromFile("Resources/Image/bullet.png");
     myPlayer = QSharedPointer<Player>(new Player);
     myPlayer.data()->animated = walkAnimation;
+//    myPlayer.data()->Sprite.setPosition(200.f, 300.f);
+    myPlayer.data()->setAnimationSequence(Direction::Down);
 
 }
 void MyCanvas::OnInit(){
-    moveSpeed = 100;
+    moveSpeed = 300;
 
 
 
@@ -60,7 +62,7 @@ void MyCanvas::OnUpdate(){
     myTime = myClock.restart();
     movement.x = 0.f;
     movement.y = 0.f;
-    if(!chatWidget->hasFocus() && this->isActiveWindow()){
+    if(!chatWidget->hasFocus() && this->isActiveWindow() && playing){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
             movement.y -= moveSpeed;
             directionPressed = true;
@@ -112,14 +114,17 @@ void MyCanvas::OnUpdate(){
     animated.play(*currentAnimetion);
 
     bool collide = false;
-    for(const tmx::MapObject* now : map.QueryQuadTree(animated.getGlobalBounds())){
-        if(now->GetName() == "Wall" || now->GetName() == "Edge"){
-            if(now->GetAABB().intersects(sf::FloatRect(myPlayer.data()->Sprite.getPosition().x + movement.x, myPlayer.data()->Sprite.getPosition().y + 32.f + movement.y, 32.f, 16.f))){
-                collide = true;
-                break;
+    if(playing){
+        for(const tmx::MapObject* now : map.QueryQuadTree(myPlayer.data()->Sprite.getGlobalBounds())){
+            if(now->GetName() == "Wall" || now->GetName() == "Edge"){
+                if(now->GetAABB().intersects(sf::FloatRect(myPlayer.data()->Sprite.getPosition().x + movement.x, myPlayer.data()->Sprite.getPosition().y + 32.f + movement.y, 32.f, 16.f))){
+                    collide = true;
+                    break;
+                }
             }
         }
     }
+
     if(!collide){
 //        animated.move(movement);
         myPlayer.data()->Sprite.move(movement);
