@@ -24,7 +24,13 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
     bulletTexture.loadFromFile("Resources/Image/bullet.png");
     myPlayer = QSharedPointer<Player>(new Player);
     myPlayer.data()->animated = walkAnimation;
-//    myPlayer.data()->Sprite.setPosition(200.f, 300.f);
+    myPlayer.data()->Sprite.setPosition(200.f, 300.f);
+//    for(int i = 0; i < 4; i++){
+//        myPlayer.data()->animated[i].setSpriteSheet(myImage);
+//        for(int j = 0; j < 4; j++){
+//            myPlayer.data()->animated[i].addFrame(sf::IntRect(j * 32, i * 48, 32, 48));
+//        }
+//    }
     myPlayer.data()->setAnimationSequence(Direction::Down);
 
 }
@@ -154,12 +160,12 @@ void MyCanvas::OnUpdate(){
 
 //    RenderWindow::draw(animated);
     for(const QSharedPointer<Player> now : PlayerList){
-        if(now.data()->updated){
-            now.data()->playAnimation();
+        now.data()->playAnimation();
+        if(!now.data()->updated){
+            now.data()->Sprite.stop();
         }
-        else{
-            now.data()->stopAnimation();
-        }
+        now.data()->updated = false;
+        now.data()->Sprite.update(myTime);
         RenderWindow::draw(now.data()->Sprite);
     }
 
@@ -174,6 +180,7 @@ void MyCanvas::getChat(QWidget *chatWidget){
 
 void MyCanvas::startGame(){
     moveCounter = 0;
+    this->playing = false;
     this->playing = true;
     movementQueue.clear();
     refocusCamera();
@@ -208,6 +215,7 @@ void MyCanvas::SetPosition(int character, sf::Vector2f position, int sequence, i
     }
     else{
         QSharedPointer<Player> thePlayer = PlayerMap.value(character);
+//        sf::Vector2f movement = position - thePlayer.data()->Sprite.getPosition();
         thePlayer.data()->Sprite.setPosition(position);
         thePlayer.data()->setAnimationSequence(sequence);
         thePlayer.data()->updated = true;
@@ -261,5 +269,12 @@ void MyCanvas::addPlayer(int number){
         thePlayer.data()->animated = walkAnimation;
         PlayerMap.insert(number, thePlayer);
         PlayerList.append(thePlayer);
+
+//        for(int i = 0; i < 4; i++){
+//            thePlayer.data()->animated[i].setSpriteSheet(myImage);
+//            for(int j = 0; j < 4; j++){
+//                thePlayer.data()->animated[i].addFrame(sf::IntRect(j * 32, i * 48, 32, 48));
+//            }
+//        }
     }
 }

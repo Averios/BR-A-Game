@@ -10,7 +10,7 @@ Player::Player(QObject *parent):
 
 void Player::setAnimationSequence(int sequence){
     this->sequence= sequence;
-    Sprite.setAnimation(animated[sequence]);
+//    Sprite.setAnimation(animated[sequence]);
 }
 
 void Player::playAnimation(){
