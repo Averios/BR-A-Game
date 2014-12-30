@@ -18,3 +18,14 @@ void Player::playAnimation(){
 void Player::stopAnimation(){
     Sprite.stop();
 }
+void Player::setCooldownBullet(int time){
+    this->cooldown=time;
+}
+
+bool Player::isReadyBullet(){
+    if(this->cooldown>0)return false;
+    else return true;
+}
+void Player::update(){
+    if(this->cooldown>0)this->cooldown--;
+}

@@ -11,8 +11,12 @@ public:
     Animation* Animation;
     AnimatedSprite Sprite;
     bool updated;
+    void setCooldownBullet(int time);
+    bool isReadyBullet();
+    void update();
 private:
     int sequence;
+    int cooldown;
 };
 
 #endif // PLAYER_H

@@ -7,7 +7,8 @@ class Bullet
 public:
     Bullet(sf::Vector2f position, float angle);
     void update(float time);
-    sf::Sprite texture;
+    sf::Sprite sprite;
+    sf::Texture text;
 private:
     float angle;
     double speed;

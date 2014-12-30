@@ -3,7 +3,12 @@
 #include "qsfmlcanvas.h"
 #include "AnimatedSprite.hpp"
 #include <tmx/MapLoader.h>
-
+#include "bullet.h"
+#include <math.h>
+#include <vector>
+#include <QQueue>
+#include "player.h"
+# define M_PI           3.14159265358979323846
 class MyCanvas: public QSFMLCanvas
 {
 public:
@@ -16,7 +21,7 @@ public:
     void startGame();
     void finishGame();
     bool isPlaying();
-
+    void updateBullet();
 private:
     void OnInit();
     void OnUpdate();
@@ -35,15 +40,15 @@ private:
     Animation walkAnimation[4];
     Animation* currentAnimetion;
     AnimatedSprite animated;
-    std::vector<AnimatedSprite*> bullets;
     tmx::MapLoader map;
     tmx::MapLayer* tops;
     bool playing;
     QQueue<QPair< sf::Vector2f, int> > movementQueue;
     int moveCounter;
-
+    std::vector < Bullet*> bullets;
     sf::View standard;
     QWidget* chatWidget;
+    Player player;
 };
 
 #endif // MYCANVAS_H

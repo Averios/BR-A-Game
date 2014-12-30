@@ -65,7 +65,7 @@ void MyCanvas::OnUpdate(){
     myTime = myClock.restart();
     movement.x = 0.f;
     movement.y = 0.f;
-    if(!chatWidget->hasFocus() && this->isActiveWindow() && playing){
+    if(!chatWidget->hasFocus() && this->isActiveWindow()){
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
             movement.y -= moveSpeed;
             source.y = Up;
@@ -93,16 +93,35 @@ void MyCanvas::OnUpdate(){
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
-            std::cout << "the left button was pressed" << std::endl;
-            std::cout << "mouse x: " << mouse.x << std::endl;
-            std::cout << "mouse y: " << mouse.y << std::endl;
+//            std::cout << "the left button was pressed" << std::endl;
+//            std::cout << "mouse x: " << mouse.x << std::endl;
+//            std::cout << "mouse y: " << mouse.y << std::endl;
+            float y2=mouse.y;float x2=mouse.x;
+            float y1=animated.getPosition().y; float x1=animated.getPosition().x;
+            if( player.isReadyBullet()){
+                if (x2 < x1) {
+                    addBullet(animated.getPosition(), atan((y2 - y1)/ (x2 - x1)) + 135);
+                }
+                else
+                {
+                    addBullet(animated.getPosition(), atan((y2 - y1)/ (x2 - x1)));
+                }
+                player.setCooldownBullet(100);
+            }
 
-            std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+            //atan2(y2 - y1, x2- x1) * 180 / M_PI <<
+
+            //std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+            //std::cout << x1 << " " << y1 << ", " << x2 << " " << y2 << std::endl;
+            //std::cout << " " << atan((y2 - y1)/ (x2 - x1)) << std::endl;
         }
     }
 
+
     movement = movement * myTime.asSeconds();
     animated.play(*currentAnimetion);
+    player.update();
+    updateBullet();
 //    animated.move(movement);
 //    map.UpdateQuadTree(sf::FloatRect(0.f, 0.f, 640.f, 640.f));
 
@@ -158,6 +177,10 @@ void MyCanvas::OnUpdate(){
 
     RenderWindow::draw(animated);
 
+    for (int i=0; i<bullets.size(); i++) {
+        RenderWindow::draw(bullets.at(i)->sprite);
+    }
+
     RenderWindow::draw(*tops);
 
 //    mySprite.setTextureRect(sf::IntRect(source.x * 32, source.y * 48, 32, 48));
@@ -179,4 +202,16 @@ void MyCanvas::finishGame(){
 
 bool MyCanvas::isPlaying(){
     return this->playing;
+}
+void MyCanvas::addBullet(sf::Vector2f position, float angle){
+    Bullet* bullet = new Bullet(position,angle);
+    std::cout << angle << std::endl;
+    bullets.push_back(bullet);
+    //RenderWindow::draw();
+}
+void MyCanvas::updateBullet(){
+    for(int i=0;i< bullets.size();i++){
+        //std::cout <<  bullets.size() << std::endl;
+        bullets[i]->update(myTime.asSeconds());
+    }
 }
