@@ -1,6 +1,7 @@
 #include "player.h"
 
-Player::Player()
+Player::Player(QObject *parent):
+    QObject(parent)
 {
     sequence = 0;
     updated = false;
@@ -12,7 +13,7 @@ void Player::setAnimationSequence(int sequence){
 }
 
 void Player::playAnimation(){
-    Sprite.play(Animation[sequence]);
+    Sprite.play(animated[sequence]);
 }
 
 void Player::stopAnimation(){

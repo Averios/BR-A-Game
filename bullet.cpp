@@ -1,6 +1,7 @@
 #include "bullet.h"
 
-Bullet::Bullet(sf::Vector2f position, float angle)
+Bullet::Bullet(sf::Vector2f position, float angle, QObject *parent):
+    QObject(parent)
 {
     this->texture.setPosition(position);
     this->angle = angle;

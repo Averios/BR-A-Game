@@ -1,14 +1,17 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "AnimatedSprite.hpp"
-class Player
+#include <QObject>
+
+class Player : public QObject
 {
+    Q_OBJECT
 public:
-    Player();
+    explicit Player(QObject* parent = 0);
     void playAnimation();
     void stopAnimation();
     void setAnimationSequence(int sequence);
-    Animation* Animation;
+    Animation* animated;
     AnimatedSprite Sprite;
     bool updated;
 private:
