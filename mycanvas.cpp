@@ -24,6 +24,7 @@ void MyCanvas::OnInit(){
             walkAnimation[i].addFrame(sf::IntRect(j * 32, i * 48, 32, 48));
         }
     }
+    bulletTexture.loadFromFile("Resources/Image/bullet.png");
 
     currentAnimetion = &walkAnimation[Direction::Down];
 
@@ -36,12 +37,7 @@ void MyCanvas::OnInit(){
         if(layers.name == "Top"){
             layers.visible = false;
             tops = &layers;
-        }
-        else if(layers.name == "Spawn"){
-            std::random_device rd;
-            std::mt19937 mts(rd());
-            std::uniform_int_distribution<int> dist(0, layers.objects.size() - 1);
-            animated.setPosition(layers.objects.at(dist(mts)).GetPosition());
+            break;
         }
     }
     tops->visible = true;
@@ -163,6 +159,8 @@ void MyCanvas::refocusCamera(){
 
 void MyCanvas::setPlayerNumber(int number){
     this->playerNumber = number;
+    PlayerMap.insert(number, animated);
+    PlayerList.append(animated);
 }
 
 void MyCanvas::setSocket(qintptr socketDescriptor){
@@ -183,10 +181,41 @@ void MyCanvas::SetPosition(int character, sf::Vector2f position, int sequence, i
 
 void MyCanvas::RecalculatePosition(sf::Vector2f position, int moveSequence, int sequenceNumber){
     //Do calculation
+    QSharedPointer<Player> thePlayer = PlayerMap.value(this->playerNumber);
+    if(!movementQueue.empty()){
+        while(sequenceNumber > movementQueue.first().second){
+            movementQueue.pop_front();
+        }
+    }
+    if(!movementQueue.empty()){
+        int size = movementQueue.size();
+        for(int i = 0; i < size; i++){
+            bool collided = false;
+            for(const tmx::MapObject* obj : map.QueryQuadTree(sf::FloatRect(position.x, position.y + 32.f, 32.f, 16.f))){
+                if(obj->GetName() == "Wall" || obj->GetName() == "Edge"){
+                    if(obj->GetAABB().intersects(sf::FloatRect(position.x + movementQueue.at(i).first.x, position.y + 32.f + movementQueue.at(i).first.y, 32.f, 16.f))){
+                        collided =true;
+                        break;
+                    }
+                }
+            }
+            if(!collided){
+                position += movementQueue.at(i).first;
+            }
+        }
+        thePlayer.data()->Sprite.setPosition(position);
+    }
+    else{
+        thePlayer.data()->Sprite.setPosition(position);
+        thePlayer.data()->setAnimationSequence(moveSequence);
+    }
+    thePlayer.data()->updated = true;
 }
 
 void MyCanvas::addBullet(sf::Vector2f position, float angle){
     //Add new bullet
     QSharedPointer<Bullet> theBullet(new Bullet(position, angle));
+    theBullet.data()->setSpeed(500);
+    theBullet.data()->texture.setTexture(bulletTexture);
     bullets.append(theBullet);
 }

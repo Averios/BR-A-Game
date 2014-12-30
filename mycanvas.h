@@ -21,6 +21,7 @@ public:
     void finishGame();
     bool isPlaying();
     void setSocket(qintptr socketDescriptor);
+    void addPlayer(int number);
 
 private:
     void OnInit();
@@ -29,7 +30,7 @@ private:
 
     int playerNumber;
     sf::Texture myImage;
-    //sf::Sprite mySprite;
+    sf::Texture bulletTexture;
     sf::Clock myClock;
     sf::Time myTime;
     enum Direction{Down, Left, Right, Up};

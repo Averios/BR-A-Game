@@ -13,3 +13,7 @@ void Bullet::update(float time){
     move.y = time * speed * sin(angle);
     this->texture.move(move);
 }
+
+void Bullet::setSpeed(double speed){
+    this->speed = speed;
+}

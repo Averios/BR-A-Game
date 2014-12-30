@@ -19,3 +19,7 @@ void Player::playAnimation(){
 void Player::stopAnimation(){
     Sprite.stop();
 }
+
+sf::Vector2f Player::getPosition(){
+    return Sprite.getPosition();
+}

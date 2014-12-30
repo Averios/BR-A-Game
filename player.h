@@ -14,6 +14,7 @@ public:
     Animation* animated;
     AnimatedSprite Sprite;
     bool updated;
+    sf::Vector2f getPosition();
 private:
     int sequence;
 };

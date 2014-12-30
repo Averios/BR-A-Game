@@ -9,6 +9,7 @@ class Bullet : public QObject
 public:
     explicit Bullet(sf::Vector2f position, float angle, QObject* parent = 0);
     void update(float time);
+    void setSpeed(double speed);
     sf::Sprite texture;
 private:
     float angle;
