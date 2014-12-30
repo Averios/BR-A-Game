@@ -35,7 +35,7 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
 
 }
 void MyCanvas::OnInit(){
-    moveSpeed = 200;
+    moveSpeed = 150;
 
 
 
