@@ -45,9 +45,9 @@ private:
     AnimatedSprite animated;
     QSharedPointer<Player> myPlayer;
 
-    //QList<QSharedPointer<Bullet> > bullets;
-    //QList<QSharedPointer<Bullet> > bulletRemovalList;
-    std::vector < Bullet*> bullets;
+    QList<QSharedPointer<Bullet> > bullets;
+    QList<QSharedPointer<Bullet> > bulletRemovalList;
+//    std::vector < Bullet*> bullets;
 
     tmx::MapLoader map;
     tmx::MapLayer* tops;
@@ -61,6 +61,8 @@ private:
     QWidget* chatWidget;
     QTcpSocket* socket;
     QString moveString;
+    float fireRate;
+    float pushMouse;
 };
 
 #endif // MYCANVAS_H

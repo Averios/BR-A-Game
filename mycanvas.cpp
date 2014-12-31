@@ -32,7 +32,9 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
 //        }
 //    }
     myPlayer.data()->setAnimationSequence(Direction::Down);
-
+    myPlayer.data()->playAnimation();
+    fireRate = 100.f;
+    pushMouse = 0.f;
 }
 void MyCanvas::OnInit(){
     moveSpeed = 150;
@@ -107,16 +109,13 @@ void MyCanvas::OnUpdate(){
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
-//            std::cout << "the left button was pressed" << std::endl;
-//            std::cout << "mouse x: " << mouse.x << std::endl;
-//            std::cout << "mouse y: " << mouse.y << std::endl;
+            pushMouse += myTime.asMilliseconds();
+            if(pushMouse >= fireRate){
+                pushMouse -= fireRate;
+                sf::Vector2f mouse= standard.getCenter()-sf::Vector2f(480,270) + (sf::Vector2f)sf::Mouse::getPosition(*this);
 
-//            std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
-
-            float y2=mouse.y;float x2=mouse.x;
-            float y1=myPlayer.data()->Sprite.getPosition().y; float x1=myPlayer.data()->Sprite.getPosition().x;
-            if( myPlayer.data()->isReadyBullet()){
+                float y2=mouse.y;float x2=mouse.x;
+                float y1=myPlayer.data()->Sprite.getPosition().y; float x1=myPlayer.data()->Sprite.getPosition().x;
                 if (x2 < x1) {
                     addBullet(myPlayer.data()->Sprite.getPosition(), atan((y2 - y1)/ (x2 - x1)) + 135);
                 }
@@ -124,14 +123,13 @@ void MyCanvas::OnUpdate(){
                 {
                     addBullet(myPlayer.data()->Sprite.getPosition(), atan((y2 - y1)/ (x2 - x1)));
                 }
-                myPlayer.data()->setCooldownBullet(100);
+
+                //atan2(y2 - y1, x2- x1) * 180 / M_PI <<
+
+                //std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+                std::cout << x1 << " " << y1 << ", " << x2 << " " << y2 << std::endl;
+                //std::cout << " " << atan((y2 - y1)/ (x2 - x1)) << std::endl;
             }
-
-            //atan2(y2 - y1, x2- x1) * 180 / M_PI <<
-
-            //std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
-            std::cout << x1 << " " << y1 << ", " << x2 << " " << y2 << std::endl;
-            //std::cout << " " << atan((y2 - y1)/ (x2 - x1)) << std::endl;
         }
     }
 
@@ -193,7 +191,7 @@ void MyCanvas::OnUpdate(){
 
     for (int i=0; i<bullets.size(); i++) {
         //bullets.at(i)->update(myTime.asSeconds());
-        RenderWindow::draw(bullets.at(i)->texture);
+        RenderWindow::draw(bullets.at(i).data()->texture);
     }
 
     RenderWindow::draw(*tops);
@@ -285,15 +283,15 @@ void MyCanvas::RecalculatePosition(sf::Vector2f position, int moveSequence, int 
 
 void MyCanvas::addBullet(sf::Vector2f position, float angle){
     //Add new bullet
-    //QSharedPointer<Bullet> theBullet(new Bullet(position, angle));
-    //theBullet.data()->setSpeed(500);
-    //theBullet.data()->texture.setTexture(bulletTexture);
-    //bullets.append(theBullet);
-    Bullet* bullet = new Bullet(position, angle);
-    bullet->setSpeed(100.f);
-    bullet->texture.setTexture(bulletTexture);
-    std::cout << angle << std::endl;
-    bullets.push_back(bullet);
+    QSharedPointer<Bullet> theBullet(new Bullet(position, angle));
+    theBullet.data()->setSpeed(500);
+//    theBullet.data()->update(myTime.asSeconds());
+    theBullet.data()->texture.setTexture(bulletTexture);
+    bullets.append(theBullet);
+    float x = theBullet.data()->texture.getPosition().x;
+    float y = theBullet.data()->texture.getPosition().y;
+    QString message = "F " + QString::number(x) + QString(" ") + QString::number(y) + QString(" ") + QString::number(angle) + "\n";
+    socket->write(message.toUtf8());
 }
 
 void MyCanvas::addPlayer(int number){

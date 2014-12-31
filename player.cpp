@@ -5,7 +5,7 @@ Player::Player(QObject *parent):
 {
     sequence = 0;
     updated = false;
-    Sprite.setFrameTime(sf::seconds(0.15));
+    Sprite.setFrameTime(sf::seconds(0.05));
 }
 
 void Player::setAnimationSequence(int sequence){

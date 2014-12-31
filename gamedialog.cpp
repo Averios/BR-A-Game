@@ -96,6 +96,10 @@ void GameDialog::ReadyToRead(){
                 theCanvas->addPlayer(theStr.at(i).toInt());
             }
         }
+        else if(now.at(0) == 'F'){
+            QStringList message = now.split(" ");
+            theCanvas->addBullet(sf::Vector2f(message.at(1).toFloat(), message.at(2).toFloat()), message.at(3).toFloat());
+        }
     }
 }
 
