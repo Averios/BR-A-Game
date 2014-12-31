@@ -118,10 +118,14 @@ void MyCanvas::OnUpdate(){
                 float y1=myPlayer.data()->Sprite.getPosition().y; float x1=myPlayer.data()->Sprite.getPosition().x;
                 if (x2 < x1) {
                     addBullet(myPlayer.data()->Sprite.getPosition(), atan((y2 - y1)/ (x2 - x1)) + 135);
+                    QString message = "F " + QString::number(myPlayer.data()->getPosition().x) + QString(" ") + QString::number(myPlayer.data()->getPosition().y) + QString(" ") + QString::number(atan((y2 - y1)/ (x2 - x1)) + 135) + "\n";
+                    socket->write(message.toUtf8());
                 }
                 else
                 {
                     addBullet(myPlayer.data()->Sprite.getPosition(), atan((y2 - y1)/ (x2 - x1)));
+                    QString message = "F " + QString::number(myPlayer.data()->getPosition().x) + QString(" ") + QString::number(myPlayer.data()->getPosition().y) + QString(" ") + QString::number(atan((y2 - y1)/ (x2 - x1))) + "\n";
+                    socket->write(message.toUtf8());
                 }
 
                 //atan2(y2 - y1, x2- x1) * 180 / M_PI <<
@@ -288,10 +292,6 @@ void MyCanvas::addBullet(sf::Vector2f position, float angle){
 //    theBullet.data()->update(myTime.asSeconds());
     theBullet.data()->texture.setTexture(bulletTexture);
     bullets.append(theBullet);
-    float x = theBullet.data()->texture.getPosition().x;
-    float y = theBullet.data()->texture.getPosition().y;
-    QString message = "F " + QString::number(x) + QString(" ") + QString::number(y) + QString(" ") + QString::number(angle) + "\n";
-    socket->write(message.toUtf8());
 }
 
 void MyCanvas::addPlayer(int number){
@@ -317,3 +317,6 @@ void MyCanvas::updateBullet(){
     }
 }
 
+int MyCanvas::getPlayerNumber(){
+    return playerNumber;
+}

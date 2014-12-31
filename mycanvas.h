@@ -22,6 +22,7 @@ public:
     bool isPlaying();
     void setSocket(QTcpSocket* socket);
     void addPlayer(int number);
+    int getPlayerNumber();
 
     void updateBullet();
 
