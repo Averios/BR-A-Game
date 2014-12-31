@@ -23,6 +23,8 @@ public:
     void setSocket(QTcpSocket* socket);
     void addPlayer(int number);
 
+    void updateBullet();
+
 private:
     void OnInit();
     void OnUpdate();
@@ -43,8 +45,9 @@ private:
     AnimatedSprite animated;
     QSharedPointer<Player> myPlayer;
 
-    QList<QSharedPointer<Bullet> > bullets;
-    QList<QSharedPointer<Bullet> > bulletRemovalList;
+    //QList<QSharedPointer<Bullet> > bullets;
+    //QList<QSharedPointer<Bullet> > bulletRemovalList;
+    std::vector < Bullet*> bullets;
 
     tmx::MapLoader map;
     tmx::MapLayer* tops;

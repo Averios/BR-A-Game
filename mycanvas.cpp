@@ -21,7 +21,7 @@ MyCanvas::MyCanvas(QWidget *Parent, const QPoint &Position, const QSize &Size):
             walkAnimation[i].addFrame(sf::IntRect(j * 32, i * 48, 32, 48));
         }
     }
-    bulletTexture.loadFromFile("Resources/Image/bullet.png");
+    bulletTexture.loadFromFile("Resources/Bullet/bullet.png");
     myPlayer = QSharedPointer<Player>(new Player);
     myPlayer.data()->animated = walkAnimation;
     myPlayer.data()->Sprite.setPosition(200.f, 300.f);
@@ -113,6 +113,25 @@ void MyCanvas::OnUpdate(){
 //            std::cout << "mouse y: " << mouse.y << std::endl;
 
 //            std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+
+            float y2=mouse.y;float x2=mouse.x;
+            float y1=myPlayer.data()->Sprite.getPosition().y; float x1=myPlayer.data()->Sprite.getPosition().x;
+            if( myPlayer.data()->isReadyBullet()){
+                if (x2 < x1) {
+                    addBullet(myPlayer.data()->Sprite.getPosition(), atan((y2 - y1)/ (x2 - x1)) + 135);
+                }
+                else
+                {
+                    addBullet(myPlayer.data()->Sprite.getPosition(), atan((y2 - y1)/ (x2 - x1)));
+                }
+                myPlayer.data()->setCooldownBullet(100);
+            }
+
+            //atan2(y2 - y1, x2- x1) * 180 / M_PI <<
+
+            //std::cout << animated.getPosition().x << " " << animated.getPosition().y << std::endl;
+            std::cout << x1 << " " << y1 << ", " << x2 << " " << y2 << std::endl;
+            //std::cout << " " << atan((y2 - y1)/ (x2 - x1)) << std::endl;
         }
     }
 
@@ -170,6 +189,10 @@ void MyCanvas::OnUpdate(){
         RenderWindow::draw(now.data()->Sprite);
     }
 
+    for (int i=0; i<bullets.size(); i++) {
+        //bullets.at(i)->update(myTime.asSeconds());
+        RenderWindow::draw(bullets.at(i)->texture);
+    }
 
     RenderWindow::draw(*tops);
 
@@ -260,10 +283,15 @@ void MyCanvas::RecalculatePosition(sf::Vector2f position, int moveSequence, int 
 
 void MyCanvas::addBullet(sf::Vector2f position, float angle){
     //Add new bullet
-    QSharedPointer<Bullet> theBullet(new Bullet(position, angle));
-    theBullet.data()->setSpeed(500);
-    theBullet.data()->texture.setTexture(bulletTexture);
-    bullets.append(theBullet);
+    //QSharedPointer<Bullet> theBullet(new Bullet(position, angle));
+    //theBullet.data()->setSpeed(500);
+    //theBullet.data()->texture.setTexture(bulletTexture);
+    //bullets.append(theBullet);
+    Bullet* bullet = new Bullet(position, angle);
+    bullet->setSpeed(100.f);
+    bullet->texture.setTexture(bulletTexture);
+    std::cout << angle << std::endl;
+    bullets.push_back(bullet);
 }
 
 void MyCanvas::addPlayer(int number){
@@ -281,3 +309,11 @@ void MyCanvas::addPlayer(int number){
 //        }
     }
 }
+
+void MyCanvas::updateBullet(){
+    for(int i=0;i< bullets.size();i++){
+        //std::cout <<  bullets.size() << std::endl;
+        bullets[i]->update(myTime.asSeconds());
+    }
+}
+

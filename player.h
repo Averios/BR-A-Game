@@ -15,8 +15,14 @@ public:
     AnimatedSprite Sprite;
     bool updated;
     sf::Vector2f getPosition();
+
+    void setCooldownBullet(int time);
+    bool isReadyBullet();
+    void update();
 private:
     int sequence;
+
+    int cooldown;
 };
 
 #endif // PLAYER_H

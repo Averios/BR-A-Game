@@ -11,6 +11,7 @@ public:
     void update(float time);
     void setSpeed(double speed);
     sf::Sprite texture;
+    //sf::Texture text;
 private:
     float angle;
     double speed;

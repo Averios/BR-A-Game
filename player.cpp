@@ -24,3 +24,16 @@ void Player::stopAnimation(){
 sf::Vector2f Player::getPosition(){
     return Sprite.getPosition();
 }
+
+void Player::setCooldownBullet(int time){
+    this->cooldown=time;
+}
+
+bool Player::isReadyBullet(){
+    if(this->cooldown>0)return false;
+    else return true;
+}
+
+void Player::update(){
+    if(this->cooldown>0)this->cooldown--;
+}
