@@ -138,6 +138,8 @@ void MyCanvas::OnUpdate(){
     movement = movement * myTime.asSeconds();
     animated.play(*currentAnimetion);
 
+    updateBullet();
+
     bool collide = false;
     if(playing){
         for(const tmx::MapObject* now : map.QueryQuadTree(myPlayer.data()->Sprite.getGlobalBounds())){
