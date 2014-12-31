@@ -18,10 +18,11 @@ public:
 
     void setCooldownBullet(int time);
     bool isReadyBullet();
-    void update();
+    void update(float elapsed);
+    void startTime();
 private:
     int sequence;
-
+    float timez;
     int cooldown;
 };
 

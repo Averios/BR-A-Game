@@ -5,7 +5,7 @@ Player::Player(QObject *parent):
 {
     sequence = 0;
     updated = false;
-    Sprite.setFrameTime(sf::seconds(0.05));
+    Sprite.setFrameTime(sf::seconds(0.15));
 }
 
 void Player::setAnimationSequence(int sequence){
@@ -34,6 +34,14 @@ bool Player::isReadyBullet(){
     else return true;
 }
 
-void Player::update(){
-    if(this->cooldown>0)this->cooldown--;
+void Player::update(float elapsed){
+    this->timez -= elapsed;
+    if(timez <= 0){
+        updated = false;
+    }
+}
+
+void Player::startTime(){
+    this->timez = 150.f;
+    this->updated = true;
 }

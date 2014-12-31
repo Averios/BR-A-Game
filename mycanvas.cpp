@@ -188,7 +188,8 @@ void MyCanvas::OnUpdate(){
         if(!now.data()->updated){
             now.data()->Sprite.stop();
         }
-        now.data()->updated = false;
+//        now.data()->updated = false;
+        now.data()->update(myTime.asMilliseconds());
         now.data()->Sprite.update(myTime);
         RenderWindow::draw(now.data()->Sprite);
     }
@@ -209,8 +210,8 @@ void MyCanvas::getChat(QWidget *chatWidget){
 void MyCanvas::startGame(){
     moveCounter = 0;
     this->playing = false;
-    this->playing = true;
     movementQueue.clear();
+    this->playing = true;
     refocusCamera();
 }
 
@@ -246,7 +247,7 @@ void MyCanvas::SetPosition(int character, sf::Vector2f position, int sequence, i
 //        sf::Vector2f movement = position - thePlayer.data()->Sprite.getPosition();
         thePlayer.data()->Sprite.setPosition(position);
         thePlayer.data()->setAnimationSequence(sequence);
-        thePlayer.data()->updated = true;
+        thePlayer.data()->startTime();
     }
 }
 

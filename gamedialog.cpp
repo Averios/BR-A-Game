@@ -100,6 +100,10 @@ void GameDialog::ReadyToRead(){
             QStringList message = now.split(" ");
             if(message.at(4).toInt() != theCanvas->getPlayerNumber()) theCanvas->addBullet(sf::Vector2f(message.at(1).toFloat(), message.at(2).toFloat()), message.at(3).toFloat());
         }
+        else if(now.at(0) == 'K'){
+            QStringList message = now.split(" ");
+            if(message.at(2).toInt() == theCanvas->getPlayerNumber())theCanvas->startGame();
+        }
     }
 }
 
