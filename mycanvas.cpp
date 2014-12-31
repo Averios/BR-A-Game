@@ -136,10 +136,11 @@ void MyCanvas::OnUpdate(){
         myPlayer.data()->Sprite.move(movement);
     }
 
-    sf::Vector2f distance = this->getView().getCenter() - myPlayer.data()->getPosition();
-    if(fabs(distance.x) > 100.0f || fabs(distance.y) > 100.0f){
-        standard.move(movement);
-    }
+    standard.setCenter(myPlayer.data()->Sprite.getPosition());
+//    sf::Vector2f distance = this->getView().getCenter() - myPlayer.data()->getPosition();
+//    if(fabs(distance.x) > 100.0f || fabs(distance.y) > 100.0f){
+//        standard.move(movement);
+//    }
 
     if(!directionPressed){
         animated.stop();
@@ -251,6 +252,8 @@ void MyCanvas::RecalculatePosition(sf::Vector2f position, int moveSequence, int 
         thePlayer.data()->setAnimationSequence(moveSequence);
     }
     thePlayer.data()->updated = true;
+//    sf::Vector2f diff = position - thePlayer.data()->Sprite.getPosition();
+//    standard.move(diff);
     thePlayer.data()->Sprite.setPosition(position);
     lastPoint = position;
 }
