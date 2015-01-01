@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,12 +18,19 @@ SOURCES += main.cpp\
     qsfmlcanvas.cpp \
     mycanvas.cpp \
     AnimatedSprite.cpp \
-    Animation.cpp
+    Animation.cpp \
+    gamedialog.cpp \
+    player.cpp \
+    bullet.cpp
 
 HEADERS  += mainwindow.h \
     qsfmlcanvas.h \
     mycanvas.h \
     AnimatedSprite.hpp \
-    Animation.hpp
+    Animation.hpp \
+    gamedialog.h \
+    player.h \
+    bullet.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    gamedialog.ui
